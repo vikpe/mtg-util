@@ -77,7 +77,7 @@ const processImage = (scanNumber, filePath) => {
 
 const inputDir = 'scans';
 
-console.log(chalk`{green.bold MTG scan util}`);
+console.log(chalk`{green.bold MTG scan util (crop)}`);
 const scans = fs.readdirSync(inputDir).sort();
 console.log(chalk`{grey Found ${scans.length} scan(s)..}`);
 
