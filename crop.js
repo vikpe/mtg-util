@@ -57,15 +57,20 @@ const processImage = (scanNumber, filePath) => {
       const distFileName = `sheet-${sheetNumber}-card-${slotNumber}-${fileNameSuffix}.jpg`;
       const distFilePath = `${config.output.dir}/${distFileName}`;
 
-      image
+      let result = image
         .clone()
         .crop(
           colIndex * slotWidth,
           rowIndex * slotHeight,
           slotWidth,
           slotHeight
-        )
-        .write(distFilePath);
+        );
+
+      if ('auto' !== config.output.cardWidth) {
+        result.resize(config.output.cardWidth, Jimp.AUTO);
+      }
+
+      result.write(distFilePath);
 
       fileSpinner.stop();
     }

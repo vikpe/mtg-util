@@ -8,6 +8,7 @@ module.exports = {
   output: {
     dir: 'dist',
     imageQuality: 90,
-    overviewWidth: 1024
+    overviewWidth: 1024,
+    cardWidth: 400 // a number or 'auto'
   }
 };
