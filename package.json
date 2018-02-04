@@ -1,6 +1,7 @@
 {
   "scripts": {
     "crop": "node crop.js",
+    "combine": "node combine.js"
   },
   "dependencies": {
     "chalk": "^2.3.0",
