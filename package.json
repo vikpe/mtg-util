@@ -1,0 +1,9 @@
+{
+  "scripts": {
+    "gallerize": ""
+  },
+  "dependencies": {
+    "jimp": "^0.2.28",
+    "yargs": "^11.0.0"
+  }
+}
