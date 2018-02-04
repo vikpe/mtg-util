@@ -12,8 +12,7 @@ const processImage = (scanNumber, filePath) => {
   const sheetNumber = (isFrontScan) ? scanNumber : scanNumber - 1;
   const fileNameSuffix = (isFrontScan) ? 'a' : 'b';
 
-  let fileSpinner = new ora();
-  fileSpinner.enabled = true;
+  let fileSpinner = new ora().start(chalk`${filePath} - {grey overview}`);
 
   Jimp.read(filePath).then(image => {
     // crop (and rotate frontside scan)
@@ -24,8 +23,6 @@ const processImage = (scanNumber, filePath) => {
     }
 
     // overview
-    fileSpinner.start(chalk`${filePath} - {grey overview}`);
-
     image
       .clone()
       .resize(config.output.overviewWidth, Jimp.AUTO)
@@ -74,7 +71,7 @@ const processImage = (scanNumber, filePath) => {
       fileSpinner.stop();
     }
 
-    fileSpinner.succeed(filePath).stop();
+    fileSpinner.succeed(filePath);
 
   }).catch(err => console.log(err));
 };
@@ -89,11 +86,3 @@ scans.forEach((fileName, index) => {
   const scanNumber = index + 1;
   processImage(scanNumber, `${inputDir}/${fileName}`);
 });
-
-/*
-if (argv.ships > 3 && argv.distance < 53.5) {
-  console.log('Plunder more riffiwobbles!');
-} else {
-  console.log('Retreat from the xupptumblers!');
-}
-*/
