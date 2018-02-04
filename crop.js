@@ -31,7 +31,7 @@ const processImage = (scanNumber, filePath) => {
       .clone()
       .resize(config.output.overviewWidth, Jimp.AUTO)
       .quality(config.output.imageQuality)
-      .write(`${config.output.dir}/${sheetNumber}-overview-${fileNameSuffix}.jpg`);
+      .write(`${config.output.dir}/sheet-${sheetNumber}-${fileNameSuffix}.jpg`);
 
     // pockets
     const slotWidth = Math.floor(config.sheet.width / config.sheet.cols);
@@ -54,7 +54,7 @@ const processImage = (scanNumber, filePath) => {
 
       fileSpinner.start(chalk`${filePath} - {grey slot ${slotNumber}}`);
 
-      const distFileName = `${sheetNumber}-${slotNumber}-${fileNameSuffix}.jpg`;
+      const distFileName = `sheet-${sheetNumber}-card-${slotNumber}-${fileNameSuffix}.jpg`;
       const distFilePath = `${config.output.dir}/${distFileName}`;
 
       image
