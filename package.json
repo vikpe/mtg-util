@@ -1,6 +1,6 @@
 {
   "scripts": {
-    "gallerize": ""
+    "gallerize": "node index.js"
   },
   "dependencies": {
     "chalk": "^2.3.0",

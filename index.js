@@ -1,18 +1,20 @@
 const argv = require('yargs').argv;
 const Jimp = require('jimp');
 const fs = require('fs');
+const chalk = require('chalk');
+const ora = require('ora');
 
 const sheetConfig = {
-  sheetWidth: 2680,
-  sheetHeight: 3508,
-  sheetPaddingTop: 0,
-  sheetPaddingRight: 0,
-  sheetPaddingBottom: 0,
-  sheetPaddingLeft: 180,
-
+  width: 2048,
+  height: 2806,
   rows: 3,
   cols: 3
 };
+
+sheetConfig.slotWidth = Math.floor(sheetConfig.width / sheetConfig.cols);
+sheetConfig.slotHeight = Math.floor(sheetConfig.height / sheetConfig.rows);
+sheetConfig.numberOfPockets = sheetConfig.rows * sheetConfig.cols;
+;
 
 const inputDir = 'scans';
 
@@ -22,46 +24,82 @@ const outputConfig = {
   overviewWidth: 1024
 };
 
-const createOverview = originalImage => {
-  originalImage
-    .clone()
-    .resize(outputConfig.overviewWidth, Jimp.AUTO)
-    .quality(outputConfig.imageQuality)
-    .write(`${outputConfig.dir}/overview.jpg`);
-};
-
-const gallerizeImageByFilePath = filePath => {
-  console.log(filePath);
+const processImage = (scanNumber, filePath) => {
+  const isFrontScan = (1 === (scanNumber % 2));
+  const sheetNumber = (isFrontScan) ? scanNumber : scanNumber-1;
+  const fileNameSuffix = (isFrontScan) ? 'a' : 'b';
 
   Jimp.read(filePath).then(image => {
 
-    // Save copy of original file
-    const originalImage = image.clone();
+    let fileSpinner = new ora();
+    fileSpinner.enabled = true;
+
+    // crop (rotate is needed)
+    image = image.crop(0, 0, sheetConfig.width, sheetConfig.height);
+
+    if (isFrontScan) {
+      image = image.rotate(180);
+    }
 
     // overview
-    createOverview(originalImage);
+    fileSpinner.start(chalk`${filePath} - {grey overview}`);
 
-    // each pocket
-    const numberOfPockets = sheetConfig.rows * sheetConfig.cols;
+    image
+      .clone()
+      .resize(outputConfig.overviewWidth, Jimp.AUTO)
+      .quality(outputConfig.imageQuality)
+      .write(`${outputConfig.dir}/${sheetNumber}-overview-${fileNameSuffix}.jpg`);
 
-    for (let cardIndex = 0; cardIndex < numberOfPockets; cardIndex++) {
-      const slotNumber = cardIndex + 1;
-      const rowNumber = 1 + Math.floor(cardIndex / sheetConfig.rows);
-      const colNumber = 1 + (cardIndex % sheetConfig.cols);
+    // pockets
+    for (let cardIndex = 0; cardIndex < sheetConfig.numberOfPockets; cardIndex++) {
+      const rowIndex = Math.floor(cardIndex / sheetConfig.rows);
+      const colIndex = (cardIndex % sheetConfig.cols);
 
-      console.log(cardIndex, `slot: ${slotNumber}, row: ${rowNumber}, col: ${colNumber}`);
+      let slotNumber;
+
+      if (isFrontScan) {
+        slotNumber = cardIndex + 1;
+      }
+      else {
+        slotNumber = (sheetConfig.cols * (rowIndex + 1)) - colIndex;
+      }
+
+      fileSpinner.start(chalk`${filePath} - {grey slot ${slotNumber} of ${sheetConfig.numberOfPockets}}`);
+
+      const distFileName = `${sheetNumber}-${slotNumber}-${fileNameSuffix}.jpg`;
+      const distFilePath = `${outputConfig.dir}/${distFileName}`;
+
+      image
+        .clone()
+        .crop(
+          colIndex * sheetConfig.slotWidth,
+          rowIndex * sheetConfig.slotHeight,
+          sheetConfig.slotWidth,
+          sheetConfig.slotHeight
+        )
+        .write(distFilePath);
+
+      fileSpinner.stop();
     }
+
+    fileSpinner.succeed(filePath).stop();
 
   }).catch(err => console.log(err));
 };
 
-const scans = fs.readdirSync(inputDir);
-scans.forEach((filename, index) => {
-  gallerizeImageByFilePath(`${inputDir}/${filename}`);
+console.log(chalk`{green.bold MTG scan util}`);
+const scans = fs.readdirSync(inputDir).sort();
+console.log(chalk`{grey Found ${scans.length} scan(s)..}`);
+
+scans.forEach((fileName, index) => {
+  const scanNumber = index + 1;
+  processImage(scanNumber, `${inputDir}/${fileName}`);
 });
 
+/*
 if (argv.ships > 3 && argv.distance < 53.5) {
   console.log('Plunder more riffiwobbles!');
 } else {
   console.log('Retreat from the xupptumblers!');
 }
+*/
