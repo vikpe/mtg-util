@@ -3,7 +3,9 @@
     "gallerize": ""
   },
   "dependencies": {
+    "chalk": "^2.3.0",
     "jimp": "^0.2.28",
+    "ora": "^1.4.0",
     "yargs": "^11.0.0"
   }
 }
