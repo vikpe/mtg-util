@@ -18,9 +18,6 @@ const frontSideScans = fs
 
 console.log(chalk`{grey Found ${frontSideScans.length} card(s)..}`);
 
-let spinner = new ora();
-spinner.enabled = true;
-
 const combineImagesHorizontally = (frontSide, backSide, filePath) => {
   const resultWidth = frontSide.bitmap.width + backSide.bitmap.width;
   const resultHeight = Math.max(frontSide.bitmap.height, backSide.bitmap.height);
@@ -34,29 +31,34 @@ const combineImagesHorizontally = (frontSide, backSide, filePath) => {
       .blit(frontSide, 0, 0)
       .blit(backSide, frontSide.bitmap.width, 0)
       .write(filePath, () => {
-        spinner.succeed().stop();
+        return global.Promise.resolve();
       });
   });
 };
 
-const processCard = filePath => {
-  spinner.start(filePath.replace('-a.jpg', ''));
-
+const readCard = filePath => {
   const promises = [
     Jimp.read(filePath),
     Jimp.read(filePath.replace('-a.', '-b.'))
   ];
 
-  global.Promise.all(promises).then(result => {
-    combineImagesHorizontally(
-      result[0],
-      result[1],
-      filePath.replace('-a.', '-c.')
-    );
-  });
+  return global.Promise.all(promises);
 };
 
 frontSideScans.forEach(fileName => {
   const filePath = `${config.output.dir}/${fileName}`;
-  processCard(filePath);
+
+  let spinner = new ora().start(filePath.replace('-a.jpg', ''));
+
+  readCard(filePath)
+    .then(result => {
+      combineImagesHorizontally(
+        result[0],
+        result[1],
+        filePath.replace('-a.', '-c.')
+      );
+    })
+    .then(() => {
+      spinner.succeed().stop();
+    });
 });

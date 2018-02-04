@@ -12,11 +12,10 @@ const processImage = (scanNumber, filePath) => {
   const sheetNumber = (isFrontScan) ? scanNumber : scanNumber - 1;
   const fileNameSuffix = (isFrontScan) ? 'a' : 'b';
 
+  let fileSpinner = new ora();
+  fileSpinner.enabled = true;
+
   Jimp.read(filePath).then(image => {
-
-    let fileSpinner = new ora();
-    fileSpinner.enabled = true;
-
     // crop (and rotate frontside scan)
     image = image.crop(0, 0, config.sheet.width, config.sheet.height);
 
