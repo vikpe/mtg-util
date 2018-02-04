@@ -9,7 +9,7 @@ const config = require('./mtgUtilConfig');
 
 const processImage = (scanNumber, filePath) => {
   const isFrontScan = (1 === (scanNumber % 2));
-  const sheetNumber = (isFrontScan) ? scanNumber : scanNumber - 1;
+  const sheetNumber = Math.floor((1 + scanNumber) / 2);
   const fileNameSuffix = (isFrontScan) ? 'a' : 'b';
 
   let fileSpinner = new ora().start(chalk`${filePath} - {grey overview}`);
