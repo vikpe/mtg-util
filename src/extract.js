@@ -33,9 +33,10 @@ const writePockets = scan => new global.Promise(resolve => {
 
 const writePocket = (scan, pocketIndex) => new global.Promise(resolve => {
   const pocketNumber = mtgUtil.getPocketNumber(pocketIndex, scan.isFrontside);
-  console.log(chalk`${scan.imageSourcePath} - {grey pocket ${pocketNumber}}`);
   const pocketImage = imageUtil.cropPocketFromScan(scan.image, pocketIndex);
   const pocketId = `${scan.sheetId}-pocket-${pocketNumber}`;
+
+  console.log(chalk`${scan.imageSourcePath} - {grey pocket ${pocketNumber}}`);
 
   if ('auto' !== config.output.pocketWidth) {
     pocketImage.resize(config.output.pocketWidth, Jimp.AUTO);
@@ -48,13 +49,12 @@ const writePocket = (scan, pocketIndex) => new global.Promise(resolve => {
   const distFilePath = `${config.output.dir}/${pocketId}.jpg`;
 
   return pocketImage
-    .resize(config.output.sheetWidth, Jimp.AUTO)
     .quality(config.output.imageQuality)
     .write(distFilePath, () => resolve(scan));
 });
 
 const writeCardArtwork = (cardImage, pocketId) => {
-  const distFilePath = `${config.output.dir}/${pocketId}-artwork.jpg`;
+  const distFilePath = `${config.output.dir}/${pocketId.replace('-front-', '-artwork-')}.jpg`;
 
   imageUtil
     .cropArtworkFromCard(cardImage)
@@ -64,14 +64,15 @@ const writeCardArtwork = (cardImage, pocketId) => {
 
 const getScan = (filePath, scanIndex) => {
   const scanNumber = scanIndex + 1;
+  const sheetNumber = mtgUtil.getSheetNumberByScanNumber(scanNumber);
   const isFrontside = mtgUtil.isFrontsideScan(scanNumber);
   const scanSide = isFrontside ? 'front' : 'back';
 
   const scan = {
     scanIndex,
     scanNumber,
-    sheetNumber: mtgUtil.getSheetNumberByScanNumber(scanNumber),
-    sheetId: `sheet-${scanNumber}-${scanSide}`,
+    sheetNumber,
+    sheetId: `sheet-${sheetNumber}-${scanSide}`,
     isFrontside,
     imageSourcePath: filePath,
     image: null
