@@ -1,22 +1,49 @@
 const Jimp = require('jimp');
 const _sum = require('lodash/sum');
+const config = require('../mtgUtilConfig');
+const mtgUtil = require('./mtgUtil');
 
 const readImages = filePaths => {
   const promises = filePaths.map(filePath => Jimp.read(filePath));
   return global.Promise.all(promises);
 };
 
-const cropArtwork = image => {
+const cropScan = scanImage => {
+  return scanImage.crop(0, 0, config.sheet.width, config.sheet.height);
+};
+
+const cropArtworkFromCard = cardImage => {
   const horizontalOffset = 0.15;
   const topOffset = 0.1;
   const artWorkHeight = 0.5;
 
-  return image
+  return cardImage
+    .clone()
     .crop(
-      image.bitmap.width * horizontalOffset,
-      image.bitmap.height * topOffset,
-      image.bitmap.width * (1 - (2 * horizontalOffset)),
-      image.bitmap.height * artWorkHeight
+      cardImage.bitmap.width * horizontalOffset,
+      cardImage.bitmap.height * topOffset,
+      cardImage.bitmap.width * (1 - (2 * horizontalOffset)),
+      cardImage.bitmap.height * artWorkHeight
+    );
+};
+
+const cropSlotFromScan = (scanImage, slotIndex) => {
+  const rowIndex = mtgUtil.getRowIndexBySlotIndex(slotIndex);
+  const colIndex = mtgUtil.getColIndexBySlotIndex(slotIndex);
+
+  const slotWidth = Math.floor(config.sheet.width / config.sheet.cols);
+  const slotHeight = Math.floor(config.sheet.height / config.sheet.rows);
+
+  const x = colIndex * slotWidth;
+  const y = rowIndex * slotHeight;
+
+  return scanImage
+    .clone()
+    .crop(
+      x,
+      y,
+      slotWidth,
+      slotHeight
     );
 };
 
@@ -62,7 +89,9 @@ const combineVertically = (images) => new global.Promise(resolve => {
 
 module.exports = {
   readImages,
-  getArtwork: cropArtwork,
+  cropSlotFromScan,
+  cropScan,
+  cropArtworkFromCard,
   combineHorizontally,
   combineVertically
 };

@@ -1,7 +1,28 @@
+// vendor
 const Jimp = require('jimp');
 const glob = require('glob');
+
+// custom
 const config = require('../mtgUtilConfig');
 const mtgUtil = require('./mtgUtil');
+
+const isFrontsideScan = scanNumber => (1 === (scanNumber % 2));
+const getSheetNumberByScanNumber = scanNumber => Math.floor((1 + scanNumber) / 2);
+
+const getRowIndexBySlotIndex = slotIndex => Math.floor(slotIndex / config.sheet.rows);
+const getColIndexBySlotIndex = slotIndex => (slotIndex % config.sheet.cols);
+
+const getSlotNumber = (slotIndex, isFrontsideScan = false) => {
+  if (isFrontsideScan) {
+    return slotIndex + 1;
+  }
+  else {
+    const rowIndex = getRowIndexBySlotIndex(slotIndex);
+    const colIndex = getColIndexBySlotIndex(slotIndex);
+
+    return (config.sheet.cols * (rowIndex + 1)) - colIndex;
+  }
+};
 
 const getImageInfo = fileName => {
   const parts = fileName.split('-');
@@ -34,6 +55,11 @@ const suffixes = {
 module.exports = {
   frontsideFilePaths,
   thumbnailFilePaths,
+  isFrontsideScan,
+  getSheetNumberByScanNumber,
+  getRowIndexBySlotIndex,
+  getColIndexBySlotIndex,
+  getSlotNumber,
   getOutputImage,
   getImageInfo,
   suffixes,

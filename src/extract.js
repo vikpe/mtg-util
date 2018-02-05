@@ -10,59 +10,39 @@ const imageUtil = require('./imageUtil');
 const mtgUtil = require('./mtgUtil');
 
 const extractScan = (scanNumber, filePath) => {
-  const isFrontScan = (1 === (scanNumber % 2));
-  const sheetNumber = Math.floor((1 + scanNumber) / 2);
-  const fileNameSuffix = (isFrontScan) ? mtgUtil.suffixes.front : mtgUtil.suffixes.back;
+  const isFrontsideScan = mtgUtil.isFrontsideScan(scanNumber);
+  const sheetNumber = mtgUtil.getSheetNumberByScanNumber(scanNumber);
+  const fileNameSuffix = (isFrontsideScan) ? mtgUtil.suffixes.front : mtgUtil.suffixes.back;
 
   let fileSpinner = new ora().start(chalk`${filePath} - {grey overview}`);
 
-  Jimp.read(filePath).then(image => {
+  Jimp.read(filePath).then(scanImage => {
     // crop (and rotate frontside scan)
-    image = image.crop(0, 0, config.sheet.width, config.sheet.height);
+    scanImage = imageUtil.cropScan(scanImage);
 
-    if (isFrontScan) {
-      image = image.rotate(180);
+    if (isFrontsideScan) {
+      scanImage = scanImage.rotate(180);
     }
 
     // overview
-    image
+    scanImage
       .clone()
       .resize(config.output.overviewWidth, Jimp.AUTO)
       .quality(config.output.imageQuality)
       .write(`${config.output.dir}/sheet-${sheetNumber}-${fileNameSuffix}.jpg`);
 
     // pockets
-    const slotWidth = Math.floor(config.sheet.width / config.sheet.cols);
-    const slotHeight = Math.floor(config.sheet.height / config.sheet.rows);
+    const numberOfSlotsPerSheet = config.sheet.rows * config.sheet.cols;
 
-    const numberOfPocketsPerSheet = config.sheet.rows * config.sheet.cols;
-
-    for (let cardIndex = 0; cardIndex < numberOfPocketsPerSheet; cardIndex++) {
-      const rowIndex = Math.floor(cardIndex / config.sheet.rows);
-      const colIndex = (cardIndex % config.sheet.cols);
-
-      let slotNumber;
-
-      if (isFrontScan) {
-        slotNumber = cardIndex + 1;
-      }
-      else {
-        slotNumber = (config.sheet.cols * (rowIndex + 1)) - colIndex;
-      }
+    for (let slotIndex = 0; slotIndex < numberOfSlotsPerSheet; slotIndex++) {
+      const slotNumber = mtgUtil.getSlotNumber(slotIndex, isFrontsideScan);
 
       fileSpinner.start(chalk`${filePath} - {grey slot ${slotNumber}}`);
 
       const distFileName = `sheet-${sheetNumber}-card-${slotNumber}-${fileNameSuffix}.jpg`;
       const distFilePath = `${config.output.dir}/${distFileName}`;
 
-      let result = image
-        .clone()
-        .crop(
-          colIndex * slotWidth,
-          rowIndex * slotHeight,
-          slotWidth,
-          slotHeight
-        );
+      let result = imageUtil.cropSlotFromScan(scanImage, slotIndex);
 
       if ('auto' !== config.output.cardWidth) {
         result.resize(config.output.cardWidth, Jimp.AUTO);
@@ -71,9 +51,9 @@ const extractScan = (scanNumber, filePath) => {
       result.write(distFilePath);
 
       // artwork
-      if (isFrontScan) {
+      if (isFrontsideScan) {
         imageUtil
-          .getArtwork(result.clone())
+          .cropArtworkFromCard(result)
           .resize(120, Jimp.AUTO)
           .write(distFilePath.replace(`-${mtgUtil.suffixes.front}.`, `-${mtgUtil.suffixes.thumbnail}.`));
       }
