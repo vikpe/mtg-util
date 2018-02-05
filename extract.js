@@ -70,8 +70,10 @@ const extractScan = (scanNumber, filePath) => {
       result.write(distFilePath);
 
       if (isFrontScan) {
-        const artWork = imageUtil.getArtwork(result.clone());
-        artWork.write(distFilePath.replace('-a.', '-t.'));
+        imageUtil
+          .getArtwork(result.clone())
+          .resize(120, Jimp.AUTO)
+          .write(distFilePath.replace('-a.', '-t.'));
       }
 
       fileSpinner.stop();
