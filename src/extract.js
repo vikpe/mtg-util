@@ -4,14 +4,15 @@ const glob = require('glob');
 const Jimp = require('jimp');
 const ora = require('ora');
 
-// config
+// custom
 const config = require('../mtgUtilConfig');
 const imageUtil = require('./imageUtil');
+const mtgUtil = require('./mtgUtil');
 
 const extractScan = (scanNumber, filePath) => {
   const isFrontScan = (1 === (scanNumber % 2));
   const sheetNumber = Math.floor((1 + scanNumber) / 2);
-  const fileNameSuffix = (isFrontScan) ? 'a' : 'b';
+  const fileNameSuffix = (isFrontScan) ? mtgUtil.suffixes.front : mtgUtil.suffixes.back;
 
   let fileSpinner = new ora().start(chalk`${filePath} - {grey overview}`);
 
@@ -69,11 +70,12 @@ const extractScan = (scanNumber, filePath) => {
 
       result.write(distFilePath);
 
+      // artwork
       if (isFrontScan) {
         imageUtil
           .getArtwork(result.clone())
           .resize(120, Jimp.AUTO)
-          .write(distFilePath.replace('-a.', '-t.'));
+          .write(distFilePath.replace(`-${mtgUtil.suffixes.front}.`, `-${mtgUtil.suffixes.thumbnail}.`));
       }
 
       fileSpinner.stop();
@@ -84,7 +86,7 @@ const extractScan = (scanNumber, filePath) => {
   }).catch(err => console.log(err));
 };
 
-const scans = glob.sync('scans/*').sort();
+const scans = glob.sync(mtgUtil.globs.scans);
 
 console.log(chalk`{green.bold MTG scan util (extract)}`);
 console.log(chalk`{grey Found ${scans.length} scan(s)..}`);

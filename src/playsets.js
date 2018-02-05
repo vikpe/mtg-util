@@ -3,11 +3,12 @@ const chalk = require('chalk');
 const Jimp = require('jimp');
 const glob = require('glob');
 
-// config
+// custom
 const imageUtil = require('./imageUtil');
+const mtgUtil = require('./mtgUtil');
 
 const similarityThreshold = 0.1;
-const thumbnailFilePaths = glob.sync('dist/*-card-*-t.*');
+const thumbnailFilePaths = glob.sync(mtgUtil.globs.thumbnailFilePaths);
 
 console.log(chalk`{green.bold MTG scan util (find playsets)}`);
 console.log(chalk`{grey Found ${thumbnailFilePaths.length} card(s)..}`);

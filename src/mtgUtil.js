@@ -1,6 +1,7 @@
 const Jimp = require('jimp');
 const glob = require('glob');
 const config = require('../mtgUtilConfig');
+const mtgUtil = require('./mtgUtil');
 
 const getImageInfo = fileName => {
   const parts = fileName.split('-');
@@ -20,13 +21,26 @@ const getImageInfo = fileName => {
 };
 
 const getOutputImage = fileName => Jimp.read(`${config.output.dir}/${fileName}`);
-const frontSideScans = () => glob.sync(`${config.output.dir}/*-card-*-a.*`);
+const frontsideFilePaths = () => glob.sync(mtgUtil.globs.frontsides);
+const thumbnailFilePaths = () => glob.sync(mtgUtil.globs.thumbnail);
+
+const suffixes = {
+  front: 'a',
+  back: 'b',
+  combined: 'c',
+  thumbnail: 't'
+};
 
 module.exports = {
-  frontSideScans,
+  frontsideFilePaths,
+  thumbnailFilePaths,
   getOutputImage,
   getImageInfo,
+  suffixes,
   globs: {
+    scans: 'scans/*',
+    thumbnails: `${config.output.dir}/*-card-*-${suffixes.thumbnail}.*`,
+    frontsides: `${config.output.dir}/*-card-*-${suffixes.front}.*`,
     filesToClean: `${config.output.dir}/*-card-*-[abt].*`
   }
 };
