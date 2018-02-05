@@ -54,7 +54,7 @@ const globs = {
   scans: 'scans/*',
   thumbnails: `${config.output.dir}/*-card-*-${suffixes.thumbnail}.*`,
   frontsides: `${config.output.dir}/*-front-pocket-*.*`,
-  filesToClean: `${config.output.dir}/*-card-*-[abt].*`
+  filesToClean: `${config.output.dir}/*+(front|back|artwork)*.*`
 };
 
 module.exports = {
