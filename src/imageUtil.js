@@ -14,8 +14,8 @@ const cropScan = scanImage => {
 
 const cropArtworkFromCard = cardImage => {
   const horizontalOffset = 0.15;
-  const topOffset = 0.1;
-  const artWorkHeight = 0.5;
+  const topOffset = 0.14;
+  const artWorkHeight = 0.4;
 
   return cardImage
     .clone()
