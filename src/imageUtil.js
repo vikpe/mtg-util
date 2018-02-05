@@ -27,9 +27,9 @@ const cropArtworkFromCard = cardImage => {
     );
 };
 
-const cropSlotFromScan = (scanImage, slotIndex) => {
-  const rowIndex = mtgUtil.getRowIndexBySlotIndex(slotIndex);
-  const colIndex = mtgUtil.getColIndexBySlotIndex(slotIndex);
+const cropPocketFromScan = (scanImage, slotIndex) => {
+  const rowIndex = mtgUtil.getRowIndexByPocketIndex(slotIndex);
+  const colIndex = mtgUtil.getColIndexByPocketIndex(slotIndex);
 
   const slotWidth = Math.floor(config.sheet.width / config.sheet.cols);
   const slotHeight = Math.floor(config.sheet.height / config.sheet.rows);
@@ -89,7 +89,7 @@ const combineVertically = (images) => new global.Promise(resolve => {
 
 module.exports = {
   readImages,
-  cropSlotFromScan,
+  cropPocketFromScan,
   cropScan,
   cropArtworkFromCard,
   combineHorizontally,

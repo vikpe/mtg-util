@@ -8,7 +8,7 @@ const imageUtil = require('./imageUtil');
 const mtgUtil = require('./mtgUtil');
 
 const similarityThreshold = 0.1;
-const thumbnailFilePaths = glob.sync(mtgUtil.globs.thumbnailFilePaths);
+const thumbnailFilePaths = glob.sync(mtgUtil.globs.getThumbnailFilePaths);
 
 console.log(chalk`{green.bold MTG scan util (find playsets)}`);
 console.log(chalk`{grey Found ${thumbnailFilePaths.length} card(s)..}`);

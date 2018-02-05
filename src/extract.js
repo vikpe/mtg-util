@@ -9,69 +9,102 @@ const config = require('../mtgUtilConfig');
 const imageUtil = require('./imageUtil');
 const mtgUtil = require('./mtgUtil');
 
-const extractScan = (scanNumber, filePath) => {
-  const isFrontsideScan = mtgUtil.isFrontsideScan(scanNumber);
-  const sheetNumber = mtgUtil.getSheetNumberByScanNumber(scanNumber);
-  const fileNameSuffix = (isFrontsideScan) ? mtgUtil.suffixes.front : mtgUtil.suffixes.back;
+const writeScan = scan => new global.Promise(resolve => {
+  const distFilePath = `${config.output.dir}/${scan.sheetId}.jpg`;
 
-  let fileSpinner = new ora().start(chalk`${filePath} - {grey overview}`);
-
-  Jimp.read(filePath).then(scanImage => {
-    // crop (and rotate frontside scan)
-    scanImage = imageUtil.cropScan(scanImage);
-
-    if (isFrontsideScan) {
-      scanImage = scanImage.rotate(180);
-    }
-
-    // overview
-    scanImage
+  scan.image
       .clone()
-      .resize(config.output.overviewWidth, Jimp.AUTO)
+      .resize(config.output.sheetWidth, Jimp.AUTO)
       .quality(config.output.imageQuality)
-      .write(`${config.output.dir}/sheet-${sheetNumber}-${fileNameSuffix}.jpg`);
+      .write(distFilePath, () => resolve(scan));
+});
 
-    // pockets
-    const numberOfSlotsPerSheet = config.sheet.rows * config.sheet.cols;
+const writePockets = scan => new global.Promise(resolve => {
+  const numberOfPocketsPerPage = config.sheet.rows * config.sheet.cols;
+  const promises = [];
 
-    for (let slotIndex = 0; slotIndex < numberOfSlotsPerSheet; slotIndex++) {
-      const slotNumber = mtgUtil.getSlotNumber(slotIndex, isFrontsideScan);
+  for (let pocketIndex = 0; pocketIndex < numberOfPocketsPerPage; pocketIndex++) {
+    promises.push(writePocket(scan, pocketIndex));
+  }
 
-      fileSpinner.start(chalk`${filePath} - {grey slot ${slotNumber}}`);
+  global.Promise.all(promises)
+        .then(() => resolve(scan));
+});
 
-      const distFileName = `sheet-${sheetNumber}-card-${slotNumber}-${fileNameSuffix}.jpg`;
-      const distFilePath = `${config.output.dir}/${distFileName}`;
+const writePocket = (scan, pocketIndex) => new global.Promise(resolve => {
+  const pocketNumber = mtgUtil.getPocketNumber(pocketIndex, scan.isFrontside);
+  console.log(chalk`${scan.imageSourcePath} - {grey pocket ${pocketNumber}}`);
+  const pocketImage = imageUtil.cropPocketFromScan(scan.image, pocketIndex);
+  const pocketId = `${scan.sheetId}-pocket-${pocketNumber}`;
 
-      let result = imageUtil.cropSlotFromScan(scanImage, slotIndex);
+  if ('auto' !== config.output.pocketWidth) {
+    pocketImage.resize(config.output.pocketWidth, Jimp.AUTO);
+  }
 
-      if ('auto' !== config.output.cardWidth) {
-        result.resize(config.output.cardWidth, Jimp.AUTO);
-      }
+  if (scan.isFrontside) {
+    writeCardArtwork(pocketImage, pocketId);
+  }
 
-      result.write(distFilePath);
+  const distFilePath = `${config.output.dir}/${pocketId}.jpg`;
 
-      // artwork
-      if (isFrontsideScan) {
-        imageUtil
-          .cropArtworkFromCard(result)
-          .resize(120, Jimp.AUTO)
-          .write(distFilePath.replace(`-${mtgUtil.suffixes.front}.`, `-${mtgUtil.suffixes.thumbnail}.`));
-      }
+  return pocketImage
+    .resize(config.output.sheetWidth, Jimp.AUTO)
+    .quality(config.output.imageQuality)
+    .write(distFilePath, () => resolve(scan));
+});
 
-      fileSpinner.stop();
-    }
+const writeCardArtwork = (cardImage, pocketId) => {
+  const distFilePath = `${config.output.dir}/${pocketId}-artwork.jpg`;
 
-    fileSpinner.succeed(filePath);
-
-  }).catch(err => console.log(err));
+  imageUtil
+    .cropArtworkFromCard(cardImage)
+    .resize(120, Jimp.AUTO)
+    .write(distFilePath);
 };
 
-const scans = glob.sync(mtgUtil.globs.scans);
+const getScan = (filePath, scanIndex) => {
+  const scanNumber = scanIndex + 1;
+  const isFrontside = mtgUtil.isFrontsideScan(scanNumber);
+  const scanSide = isFrontside ? 'front' : 'back';
+
+  const scan = {
+    scanIndex,
+    scanNumber,
+    sheetNumber: mtgUtil.getSheetNumberByScanNumber(scanNumber),
+    sheetId: `sheet-${scanNumber}-${scanSide}`,
+    isFrontside,
+    imageSourcePath: filePath,
+    image: null
+  };
+
+  const processScanImage = image => {
+    image = imageUtil.cropScan(image);
+
+    if (scan.isFrontside) {
+      image.rotate(180);
+    }
+
+    return global.Promise.resolve(image);
+  };
+
+  return new global.Promise(resolve => {
+    Jimp
+      .read(scan.imageSourcePath)
+      .then(image => processScanImage(image))
+      .then(image => {
+        scan.image = image;
+        resolve(scan);
+      });
+  });
+};
+
+const scanFilePaths = glob.sync(mtgUtil.globs.scans).sort();
 
 console.log(chalk`{green.bold MTG scan util (extract)}`);
-console.log(chalk`{grey Found ${scans.length} scan(s)..}`);
+console.log(chalk`{grey Found ${scanFilePaths.length} scan(s)..}`);
 
-scans.forEach((filePath, index) => {
-  const scanNumber = index + 1;
-  extractScan(scanNumber, filePath);
+scanFilePaths.forEach((filePath, index) => {
+  getScan(filePath, index)
+    .then(scan => writeScan(scan))
+    .then(scan => writePockets(scan));
 });

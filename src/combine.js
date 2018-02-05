@@ -6,7 +6,7 @@ const ora = require('ora');
 const imageUtil = require('./imageUtil');
 const mtgUtil = require('./mtgUtil');
 
-const frontSideScans = mtgUtil.frontsideFilePaths();
+const frontSideScans = mtgUtil.getFrontsideFilePaths();
 
 console.log(chalk`{green.bold MTG scan util (combine)}`);
 console.log(chalk`{grey Found ${frontSideScans.length} card(s)..}`);

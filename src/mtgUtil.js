@@ -5,24 +5,32 @@ const glob = require('glob');
 // custom
 const config = require('../mtgUtilConfig');
 const mtgUtil = require('./mtgUtil');
+const imageUtil = require('./imageUtil');
+
+const getScanSuffix = isFrontsideScan => isFrontsideScan ? suffixes.front : suffixes.back;
 
 const isFrontsideScan = scanNumber => (1 === (scanNumber % 2));
 const getSheetNumberByScanNumber = scanNumber => Math.floor((1 + scanNumber) / 2);
 
-const getRowIndexBySlotIndex = slotIndex => Math.floor(slotIndex / config.sheet.rows);
-const getColIndexBySlotIndex = slotIndex => (slotIndex % config.sheet.cols);
+const getRowIndexByPocketIndex = pocketIndex => Math.floor(pocketIndex / config.sheet.rows);
+const getColIndexByPocketIndex = pocketIndex => (pocketIndex % config.sheet.cols);
 
-const getSlotNumber = (slotIndex, isFrontsideScan = false) => {
+const getPocketId = (sheetNumber, slotNumber, suffix) => `sheet-${sheetNumber}-card-${slotNumber}-${suffix}`;
+const getSlotFilePathById = slotId => `${config.output.dir}/${slotId}.jpg`;
+
+const getPocketNumber = (pocketIndex, isFrontsideScan = false) => {
   if (isFrontsideScan) {
-    return slotIndex + 1;
+    return pocketIndex + 1;
   }
   else {
-    const rowIndex = getRowIndexBySlotIndex(slotIndex);
-    const colIndex = getColIndexBySlotIndex(slotIndex);
+    const rowIndex = getRowIndexByPocketIndex(pocketIndex);
+    const colIndex = getColIndexByPocketIndex(pocketIndex);
 
     return (config.sheet.cols * (rowIndex + 1)) - colIndex;
   }
 };
+
+const writeImage = (image, id, suffix, callback) => image.write(`${config.output.dir}/${id}-${suffix}.jpg`, callback);
 
 const getImageInfo = fileName => {
   const parts = fileName.split('-');
@@ -41,27 +49,24 @@ const getImageInfo = fileName => {
   };
 };
 
-const getOutputImage = fileName => Jimp.read(`${config.output.dir}/${fileName}`);
-const frontsideFilePaths = () => glob.sync(mtgUtil.globs.frontsides);
-const thumbnailFilePaths = () => glob.sync(mtgUtil.globs.thumbnail);
+const getFrontsideFilePaths = () => glob.sync(mtgUtil.globs.frontsides);
+const getThumbnailFilePaths = () => glob.sync(mtgUtil.globs.thumbnail);
 
 const suffixes = {
-  front: 'a',
-  back: 'b',
-  combined: 'c',
+  front: 'front',
+  back: 'back',
+  combined: 'combined',
   thumbnail: 't'
 };
 
 module.exports = {
-  frontsideFilePaths,
-  thumbnailFilePaths,
+  getFrontsideFilePaths,
+  getThumbnailFilePaths,
   isFrontsideScan,
   getSheetNumberByScanNumber,
-  getRowIndexBySlotIndex,
-  getColIndexBySlotIndex,
-  getSlotNumber,
-  getOutputImage,
-  getImageInfo,
+  getRowIndexByPocketIndex,
+  getColIndexByPocketIndex,
+  getPocketNumber,
   suffixes,
   globs: {
     scans: 'scans/*',
