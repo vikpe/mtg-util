@@ -3,7 +3,6 @@ const glob = require('glob');
 
 // custom
 const config = require('../mtgUtilConfig');
-const mtgUtil = require('./mtgUtil');
 
 const isFrontsideScan = scanNumber => (1 === (scanNumber % 2));
 const getSheetNumberByScanNumber = scanNumber => Math.floor((1 + scanNumber) / 2);
@@ -41,30 +40,20 @@ const getImageInfo = fileName => {
 };
 
 const getFrontsideFilePaths = () => glob.sync(globs.frontsides);
-const getThumbnailFilePaths = () => glob.sync(globs.thumbnail);
-
-const suffixes = {
-  front: 'front',
-  back: 'back',
-  combined: 'combined',
-  thumbnail: 't'
-};
 
 const globs = {
   scans: 'scans/*',
-  thumbnails: `${config.output.dir}/*-card-*-${suffixes.thumbnail}.*`,
+  artwork: `${config.output.dir}/*-artwork-pocket-*.*`,
   frontsides: `${config.output.dir}/*-front-pocket-*.*`,
   filesToClean: `${config.output.dir}/*+(front|back|artwork)*.*`
 };
 
 module.exports = {
   getFrontsideFilePaths,
-  getThumbnailFilePaths,
   isFrontsideScan,
   getSheetNumberByScanNumber,
   getRowIndexByPocketIndex,
   getColIndexByPocketIndex,
   getPocketNumber,
-  suffixes,
   globs
 };
