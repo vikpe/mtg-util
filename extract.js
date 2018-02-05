@@ -1,13 +1,13 @@
 // vendor
 const chalk = require('chalk');
-const fs = require('fs');
+const glob = require('glob');
 const Jimp = require('jimp');
 const ora = require('ora');
 
 // config
 const config = require('./mtgUtilConfig');
 
-const processImage = (scanNumber, filePath) => {
+const extractScan = (scanNumber, filePath) => {
   const isFrontScan = (1 === (scanNumber % 2));
   const sheetNumber = Math.floor((1 + scanNumber) / 2);
   const fileNameSuffix = (isFrontScan) ? 'a' : 'b';
@@ -76,13 +76,12 @@ const processImage = (scanNumber, filePath) => {
   }).catch(err => console.log(err));
 };
 
-const inputDir = 'scans';
+const scans = glob.sync('scans/*').sort();
 
-console.log(chalk`{green.bold MTG scan util (crop)}`);
-const scans = fs.readdirSync(inputDir).sort();
+console.log(chalk`{green.bold MTG scan util (extract)}`);
 console.log(chalk`{grey Found ${scans.length} scan(s)..}`);
 
-scans.forEach((fileName, index) => {
+scans.forEach((filePath, index) => {
   const scanNumber = index + 1;
-  processImage(scanNumber, `${inputDir}/${fileName}`);
+  extractScan(scanNumber, filePath);
 });

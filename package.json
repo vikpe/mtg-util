@@ -1,7 +1,7 @@
 {
   "scripts": {
     "start": "npm run crop && npm run combine && npm run clean",
-    "crop": "node crop.js",
+    "extract": "node extract.js",
     "combine": "node combine.js",
     "clean": "node clean.js"
   },
