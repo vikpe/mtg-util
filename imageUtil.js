@@ -6,6 +6,20 @@ const readImages = filePaths => {
   return global.Promise.all(promises);
 };
 
+const getArtwork = image => {
+  const horizontalOffset = 0.15;
+  const topOffset = 0.1;
+  const artWorkHeight = 0.5;
+
+  return image
+    .crop(
+      image.bitmap.width * horizontalOffset,
+      image.bitmap.height * topOffset,
+      image.bitmap.width * (1 - (2 * horizontalOffset)),
+      image.bitmap.height * artWorkHeight
+    );
+};
+
 const combineHorizontally = (images) => new global.Promise(resolve => {
   const resultWidth = _sum(images.map(image => image.bitmap.width));
   const resultHeight = Math.max(...images.map(image => image.bitmap.height));
@@ -48,6 +62,7 @@ const combineVertically = (images) => new global.Promise(resolve => {
 
 module.exports = {
   readImages,
+  getArtwork,
   combineHorizontally,
   combineVertically
 };

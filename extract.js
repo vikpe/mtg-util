@@ -6,6 +6,7 @@ const ora = require('ora');
 
 // config
 const config = require('./mtgUtilConfig');
+const imageUtil = require('./imageUtil');
 
 const extractScan = (scanNumber, filePath) => {
   const isFrontScan = (1 === (scanNumber % 2));
@@ -67,6 +68,11 @@ const extractScan = (scanNumber, filePath) => {
       }
 
       result.write(distFilePath);
+
+      if (isFrontScan) {
+        const artWork = imageUtil.getArtwork(result.clone());
+        artWork.write(distFilePath.replace('-a.', '-t.'));
+      }
 
       fileSpinner.stop();
     }
