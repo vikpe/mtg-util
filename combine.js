@@ -1,16 +1,14 @@
 // vendor
 const chalk = require('chalk');
 const ora = require('ora');
-const glob = require('glob');
 
 // config
-const config = require('./mtgUtilConfig');
 const imageUtil = require('./imageUtil');
+const util = require('./util');
+
+const frontSideScans = util.frontSideScans();
 
 console.log(chalk`{green.bold MTG scan util (combine)}`);
-
-frontSideScans = glob.sync(`${config.output.dir}/*-card-*-a.*`);
-
 console.log(chalk`{grey Found ${frontSideScans.length} card(s)..}`);
 
 frontSideScans.forEach(fileName => {
