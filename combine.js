@@ -1,64 +1,33 @@
 // vendor
 const chalk = require('chalk');
-const fs = require('fs');
-const Jimp = require('jimp');
 const ora = require('ora');
+const glob = require('glob');
 
 // config
 const config = require('./mtgUtilConfig');
+const imageUtil = require('./imageUtil');
 
 console.log(chalk`{green.bold MTG scan util (combine)}`);
 
-const frontSideFilenameRegex = /card-\d+-a/g;
+glob(`${config.output.dir}/*-card-*-a.*`, (err, frontSideScans) => {
 
-const frontSideScans = fs
-  .readdirSync(config.output.dir)
-  .filter(fileName => frontSideFilenameRegex.test(fileName))
-  .sort();
+  console.log(chalk`{grey Found ${frontSideScans.length} card(s)..}`);
 
-console.log(chalk`{grey Found ${frontSideScans.length} card(s)..}`);
+  frontSideScans.forEach(fileName => {
+    const frontSidePath = fileName;
+    const backsidePath = frontSidePath.replace('-a.', '-b.');
+    const combinedPath = frontSidePath.replace('-a.', '-c.');
+    const basePath = frontSidePath.replace('-a.jpg', '');
 
-const combineImagesHorizontally = (frontSide, backSide, filePath) => {
-  const resultWidth = frontSide.bitmap.width + backSide.bitmap.width;
-  const resultHeight = Math.max(frontSide.bitmap.height, backSide.bitmap.height);
+    let spinner = new ora().start(basePath);
 
-  new Jimp(resultWidth, resultHeight, (err, combinedImage) => {
-    if (err) {
-      throw err;
-    }
-
-    combinedImage
-      .blit(frontSide, 0, 0)
-      .blit(backSide, frontSide.bitmap.width, 0)
-      .write(filePath, () => {
-        return global.Promise.resolve();
-      });
+    imageUtil
+      .readImages([frontSidePath, backsidePath])
+      .then(images => imageUtil.combineHorizontally(images))
+      .then(combinedImage => combinedImage.write(combinedPath, () => {
+        spinner.succeed(basePath).stop();
+      }));
   });
-};
 
-const readCard = filePath => {
-  const promises = [
-    Jimp.read(filePath),
-    Jimp.read(filePath.replace('-a.', '-b.'))
-  ];
-
-  return global.Promise.all(promises);
-};
-
-frontSideScans.forEach(fileName => {
-  const filePath = `${config.output.dir}/${fileName}`;
-
-  let spinner = new ora().start(filePath.replace('-a.jpg', ''));
-
-  readCard(filePath)
-    .then(result => {
-      combineImagesHorizontally(
-        result[0],
-        result[1],
-        filePath.replace('-a.', '-c.')
-      );
-    })
-    .then(() => {
-      spinner.succeed().stop();
-    });
 });
+
