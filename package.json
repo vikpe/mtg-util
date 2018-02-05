@@ -1,10 +1,10 @@
 {
   "scripts": {
     "start": "npm run crop && npm run combine && npm run clean",
-    "extract": "node extract.js",
-    "combine": "node combine.js",
-    "playsets": "node playsets.js",
-    "clean": "node clean.js"
+    "extract": "node src/extract.js",
+    "combine": "node src/combine.js",
+    "playsets": "node src/playsets.js",
+    "clean": "node src/clean.js"
   },
   "dependencies": {
     "chalk": "^2.3.0",

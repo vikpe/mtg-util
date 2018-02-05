@@ -1,6 +1,6 @@
-const config = require('./mtgUtilConfig');
 const Jimp = require('jimp');
 const glob = require('glob');
+const config = require('../mtgUtilConfig');
 
 const getImageInfo = fileName => {
   const parts = fileName.split('-');
@@ -25,5 +25,8 @@ const frontSideScans = () => glob.sync(`${config.output.dir}/*-card-*-a.*`);
 module.exports = {
   frontSideScans,
   getOutputImage,
-  getImageInfo
+  getImageInfo,
+  globs: {
+    filesToClean: `${config.output.dir}/*-card-*-[abt].*`
+  }
 };

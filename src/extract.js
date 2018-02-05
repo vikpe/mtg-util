@@ -5,7 +5,7 @@ const Jimp = require('jimp');
 const ora = require('ora');
 
 // config
-const config = require('./mtgUtilConfig');
+const config = require('../mtgUtilConfig');
 const imageUtil = require('./imageUtil');
 
 const extractScan = (scanNumber, filePath) => {

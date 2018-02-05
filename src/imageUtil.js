@@ -6,7 +6,7 @@ const readImages = filePaths => {
   return global.Promise.all(promises);
 };
 
-const getArtwork = image => {
+const cropArtwork = image => {
   const horizontalOffset = 0.15;
   const topOffset = 0.1;
   const artWorkHeight = 0.5;
@@ -62,7 +62,7 @@ const combineVertically = (images) => new global.Promise(resolve => {
 
 module.exports = {
   readImages,
-  getArtwork,
+  getArtwork: cropArtwork,
   combineHorizontally,
   combineVertically
 };
