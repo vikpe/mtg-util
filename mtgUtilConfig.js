@@ -10,6 +10,7 @@ module.exports = {
     dir: 'dist',
     imageQuality: 90,
     sheetWidth: 1024,
-    pocketWidth: 400 // a number or 'auto'
+    pocketWidth: 400, // a number or 'auto',
+    cropArtWork: false
   }
 };
