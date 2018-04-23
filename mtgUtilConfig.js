@@ -1,5 +1,6 @@
 module.exports = {
   input: {
+    dir: 'scans',
     width: 2048,
     height: 2806,
     rows: 3,

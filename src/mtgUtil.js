@@ -42,7 +42,7 @@ const getImageInfo = fileName => {
 const getFrontsideFilePaths = () => glob.sync(globs.frontsides);
 
 const globs = {
-  scans: 'scans/*',
+  scans: `${config.input.dir}/*`,
   artwork: `${config.output.dir}/*-artwork-pocket-*.*`,
   frontsides: `${config.output.dir}/*-front-pocket-*.*`,
   filesToClean: `${config.output.dir}/*+(front|back|artwork)*.*`
