@@ -11,8 +11,8 @@ const imageUtil = require('./imageUtil');
 const mtgUtil = require('./mtgUtil');
 const spinner = ora();
 
-const writeScan = scan => new global.Promise(resolve => {
-  const distFilePath = `${config.output.dir}/${scan.sheetId}.jpg`;
+const writeSheet = scan => new global.Promise(resolve => {
+  const distFilePath = `${config.output.dir}/_${scan.sheetId}.jpg`;
 
   spinner.start(chalk`${scan.imageSourcePath} {grey - overview}`);
 
@@ -70,7 +70,7 @@ const getScan = (filePath, scanIndex) => {
     scanIndex,
     scanNumber,
     sheetNumber,
-    sheetId: `_sheet-${sheetNumber}-${scanSide}`,
+    sheetId: `sheet-${sheetNumber}-${scanSide}`,
     isFrontside,
     imageSourcePath: filePath,
     image: null
@@ -110,7 +110,7 @@ scanFilePaths.forEach((filePath, index) => {
     .then(scan => {
 
       if (scan.isFrontside && config.output.writeSheetFrontsides) {
-        queue.add(() => writeScan(scan));
+        queue.add(() => writeSheet(scan));
       }
 
       for (let pocketIndex = 0; pocketIndex < numberOfPocketsPerPage; pocketIndex++) {
