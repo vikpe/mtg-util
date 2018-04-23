@@ -70,7 +70,7 @@ const getScan = (filePath, scanIndex) => {
     scanIndex,
     scanNumber,
     sheetNumber,
-    sheetId: `sheet-${sheetNumber}-${scanSide}`,
+    sheetId: `_sheet-${sheetNumber}-${scanSide}`,
     isFrontside,
     imageSourcePath: filePath,
     image: null
