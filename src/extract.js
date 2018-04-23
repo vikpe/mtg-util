@@ -37,7 +37,7 @@ const writePocket = (scan, pocketIndex) => new global.Promise(resolve => {
     pocketImage.resize(config.output.pocketWidth, Jimp.AUTO);
   }
 
-  if (scan.isFrontside && config.output.cropArtWork) {
+  if (scan.isFrontside && config.output.writeArtwork) {
     writeCardArtwork(pocketImage, pocketId);
   }
 

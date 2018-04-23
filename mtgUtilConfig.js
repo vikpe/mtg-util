@@ -11,6 +11,6 @@ module.exports = {
     imageQuality: 90,
     sheetWidth: 1024,
     pocketWidth: 400, // a number or 'auto',
-    cropArtWork: false
+    writeArtwork: false
   }
 };

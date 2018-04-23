@@ -8,17 +8,17 @@ const imageUtil = require('./imageUtil');
 const mtgUtil = require('./mtgUtil');
 const spinner = ora();
 
-const frontsideFilePaths = mtgUtil.getFrontsideFilePaths();
+const pocketFrontsideFilePaths = mtgUtil.getFrontsideFilePaths();
 
 console.log(chalk`{green.bold MTG scan util (combine)}`);
-console.log(chalk`{grey Found ${frontsideFilePaths.length} card(s)..}`);
+console.log(chalk`{grey Found ${pocketFrontsideFilePaths.length} card(s)..}`);
 
-const combineImages = (filePath) => new global.Promise(resolve => {
-  spinner.start(filePath.replace('-front-', '-*-'));
+const combineImages = (frontsideFilePath) => new global.Promise(resolve => {
+  spinner.start(frontsideFilePath.replace('-front-', '-*-'));
 
-  const frontsidePath = filePath;
+  const frontsidePath = frontsideFilePath;
   const backsidePath = frontsidePath.replace('-front-', '-back-');
-  const combinedPath = frontsidePath.replace('-front-', '-combined-');
+  const combinedPath = frontsidePath.replace('-front-pocket-', '-card-');
 
   imageUtil
     .readImages([frontsidePath, backsidePath])
@@ -31,6 +31,6 @@ const combineImages = (filePath) => new global.Promise(resolve => {
 
 const queue = new PQueue({ concurrency: 1 });
 
-frontsideFilePaths.forEach(filePath => {
+pocketFrontsideFilePaths.forEach(filePath => {
   queue.add(() => combineImages(filePath));
 });
