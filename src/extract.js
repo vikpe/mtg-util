@@ -33,8 +33,8 @@ const writePocket = (scan, pocketIndex) => new global.Promise(resolve => {
 
   spinner.start(chalk`{grey - pocket ${pocketNumber}}`);
 
-  if ('auto' !== config.output.pocketWidth) {
-    pocketImage.resize(config.output.pocketWidth, Jimp.AUTO);
+  if ('auto' !== config.output.cardWidth) {
+    pocketImage.resize(config.output.cardWidth, Jimp.AUTO);
   }
 
   if (scan.isFrontside && config.output.writeArtwork) {
@@ -109,7 +109,9 @@ scanFilePaths.forEach((filePath, index) => {
   getScan(filePath, index)
     .then(scan => {
 
-      queue.add(() => writeScan(scan));
+      if (scan.isFrontside && config.output.writeSheetFrontsides) {
+        queue.add(() => writeScan(scan));
+      }
 
       for (let pocketIndex = 0; pocketIndex < numberOfPocketsPerPage; pocketIndex++) {
         queue.add(() => writePocket(scan, pocketIndex));

@@ -10,7 +10,8 @@ module.exports = {
     dir: 'dist',
     imageQuality: 90,
     sheetWidth: 1024,
-    pocketWidth: 400, // a number or 'auto',
+    cardWidth: 400, // a number or 'auto',
+    writeSheetFrontsides: true,
     writeArtwork: false
   }
 };
