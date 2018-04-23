@@ -1,8 +1,8 @@
 module.exports = {
   input: {
     dir: 'scans',
-    width: 2048,
-    height: 2806,
+    width: 4960,
+    height: 6840,
     rows: 3,
     cols: 3
   },
