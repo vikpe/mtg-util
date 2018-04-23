@@ -10,7 +10,7 @@ module.exports = {
     dir: 'dist',
     imageQuality: 90,
     sheetWidth: 1024,
-    cardWidth: 640, // a number or 'auto',
+    cardWidth: 512, // a number or 'auto',
     writeSheetFrontsides: true,
     writeArtwork: false
   }
