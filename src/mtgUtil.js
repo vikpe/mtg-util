@@ -7,8 +7,8 @@ const config = require('../mtgUtilConfig');
 const isFrontsideScan = scanNumber => (1 === (scanNumber % 2));
 const getSheetNumberByScanNumber = scanNumber => Math.floor((1 + scanNumber) / 2);
 
-const getRowIndexByPocketIndex = pocketIndex => Math.floor(pocketIndex / config.sheet.rows);
-const getColIndexByPocketIndex = pocketIndex => (pocketIndex % config.sheet.cols);
+const getRowIndexByPocketIndex = pocketIndex => Math.floor(pocketIndex / config.input.rows);
+const getColIndexByPocketIndex = pocketIndex => (pocketIndex % config.input.cols);
 
 const getPocketNumber = (pocketIndex, isFrontsideScan = false) => {
   if (isFrontsideScan) {
@@ -18,7 +18,7 @@ const getPocketNumber = (pocketIndex, isFrontsideScan = false) => {
     const rowIndex = getRowIndexByPocketIndex(pocketIndex);
     const colIndex = getColIndexByPocketIndex(pocketIndex);
 
-    return (config.sheet.cols * (rowIndex + 1)) - colIndex;
+    return (config.input.cols * (rowIndex + 1)) - colIndex;
   }
 };
 

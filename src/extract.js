@@ -103,7 +103,7 @@ console.log(chalk`{green.bold MTG scan util (extract)}`);
 console.log(chalk`{grey Found ${scanFilePaths.length} scan(s)..}`);
 
 const queue = new PQueue({ concurrency: 1 });
-const numberOfPocketsPerPage = config.sheet.rows * config.sheet.cols;
+const numberOfPocketsPerPage = config.input.rows * config.input.cols;
 
 scanFilePaths.forEach((filePath, index) => {
   getScan(filePath, index)

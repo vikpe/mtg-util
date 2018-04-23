@@ -9,7 +9,7 @@ const readImages = filePaths => {
 };
 
 const cropScan = scanImage => {
-  return scanImage.crop(0, 0, config.sheet.width, config.sheet.height);
+  return scanImage.crop(0, 0, config.input.width, config.input.height);
 };
 
 const cropArtworkFromCard = cardImage => {
@@ -31,8 +31,8 @@ const cropPocketFromScan = (scanImage, slotIndex) => {
   const rowIndex = mtgUtil.getRowIndexByPocketIndex(slotIndex);
   const colIndex = mtgUtil.getColIndexByPocketIndex(slotIndex);
 
-  const slotWidth = Math.floor(config.sheet.width / config.sheet.cols);
-  const slotHeight = Math.floor(config.sheet.height / config.sheet.rows);
+  const slotWidth = Math.floor(config.input.width / config.input.cols);
+  const slotHeight = Math.floor(config.input.height / config.input.rows);
 
   const x = colIndex * slotWidth;
   const y = rowIndex * slotHeight;

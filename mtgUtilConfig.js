@@ -1,5 +1,5 @@
 module.exports = {
-  sheet: {
+  input: {
     width: 2048,
     height: 2806,
     rows: 3,
