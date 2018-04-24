@@ -45,7 +45,8 @@ const globs = {
   scans: `${config.input.dir}/*`,
   artwork: `${config.output.dir}/*-artwork-pocket-*.*`,
   frontsides: `${config.output.dir}/*-front-pocket-*.*`,
-  filesToClean: `${config.output.dir}/*+(front-pocket|back|artwork)*.*`
+  filesToClean: `${config.output.dir}/*+(front-pocket|back|artwork)*.*`,
+  allDistFiles: `${config.output.dir}/*.*`,
 };
 
 module.exports = {

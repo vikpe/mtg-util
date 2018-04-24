@@ -1,8 +1,9 @@
 {
   "scripts": {
-    "start": "npm run extract && npm run combine && npm run clean",
+    "start": "npm run extract && npm run combine && npm run clean && npm run thumbnails",
     "extract": "node src/extract.js",
     "combine": "node src/combine.js",
+    "thumbnails": "node src/thumbnails.js",
     "playsets": "node src/playsets.js",
     "clean": "node src/clean.js"
   },

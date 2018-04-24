@@ -11,7 +11,9 @@ module.exports = {
     imageQuality: 85,
     sheetWidth: 1024,
     cardWidth: 512,
+    thumbnailHeight: 128,
     writeSheetFrontsides: true,
+    writeThumbnails: true,
     writeArtwork: false
   }
 };
