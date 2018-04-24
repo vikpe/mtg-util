@@ -33,9 +33,7 @@ const writePocket = (scan, pocketIndex) => new global.Promise(resolve => {
 
   spinner.start(chalk`{grey - pocket ${pocketNumber}}`);
 
-  if ('auto' !== config.output.cardWidth) {
-    pocketImage.resize(config.output.cardWidth, Jimp.AUTO);
-  }
+  pocketImage.resize(config.output.cardWidth, Jimp.AUTO);
 
   if (scan.isFrontside && config.output.writeArtwork) {
     writeCardArtwork(pocketImage, pocketId);
