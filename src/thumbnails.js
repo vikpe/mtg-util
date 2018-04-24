@@ -17,7 +17,7 @@ const writeThumbnail = (sourceFilePath, imageData) => new global.Promise(resolve
 
   imageData
     .quality(config.output.imageQuality)
-    .resize(Jimp.AUTO, config.output.thumbnailHeight)
+    .scale(config.output.thumbnailScale)
     .write(distFilePath, () => {
       spinner.succeed().stop();
       resolve();
