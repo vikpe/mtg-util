@@ -8,7 +8,7 @@ module.exports = {
   },
   output: {
     dir: 'dist',
-    imageQuality: 90,
+    imageQuality: 85,
     sheetWidth: 1024,
     cardWidth: 512, // a number or 'auto',
     writeSheetFrontsides: true,
