@@ -8,7 +8,7 @@ module.exports = {
   },
   output: {
     dir: 'dist',
-    imageQuality: 85,
+    imageQuality: 90,
     sheetWidth: 1024,
     cardWidth: 512,
     thumbnailScale: 0.18,
