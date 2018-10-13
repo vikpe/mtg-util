@@ -24,15 +24,22 @@ const writeThumbnail = (sourceFilePath, imageData) => new global.Promise(resolve
     });
 });
 
-const imageFilePaths = glob.sync(mtgUtil.globs.allDistFiles).sort();
+const run = () => {
+  const imageFilePaths = glob.sync(mtgUtil.globs.allDistFiles).sort();
 
-console.log(chalk`{green.bold MTG scan util (thumbnails)}`);
-console.log(chalk`{grey Found ${imageFilePaths.length} image(s)..}`);
+  console.log(chalk`{green.bold MTG scan util (thumbnails)}`);
+  console.log(chalk`{grey Found ${imageFilePaths.length} image(s)..}`);
 
-const queue = new PQueue({ concurrency: 1 });
+  const queue = new PQueue({concurrency: 1});
 
-imageFilePaths.forEach((imageFilePath) => {
-  Jimp.read(imageFilePath).then(imageData => {
-    queue.add(() => writeThumbnail(imageFilePath, imageData));
+  imageFilePaths.forEach((imageFilePath) => {
+    Jimp.read(imageFilePath).then(imageData => {
+      queue.add(() => writeThumbnail(imageFilePath, imageData));
+    });
   });
-});
+}
+
+if (config.output.writeThumbnails) {
+  run();
+}
+
