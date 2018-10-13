@@ -1,13 +1,23 @@
 const inputTemplates = {
   ultrapro9x9: {
-    width: 4960,
-    height: 6840,
+    cropArea: {
+      width: 4960,
+      height: 6840,
+      offset: {x: 0, y: 0},
+    },
+    rowSpacing: 0,
+    colSpacing: 0,
     rows: 3,
     cols: 3
   },
   vikpe2x2: {
-    width: 4960,
-    height: 6840,
+    cropArea: {
+      width: 4960,
+      height: 6840,
+      offset: {x: 0, y: 0},
+    },
+    rowSpacing: 0,
+    colSpacing: 0,
     rows: 2,
     cols: 2
   },
