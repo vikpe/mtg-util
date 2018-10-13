@@ -8,18 +8,20 @@ const inputTemplates = {
     },
     rowSpacing: 0,
     colSpacing: 0,
+    pocketMargin: {x: 20, y: 20},
     rows: 3,
     cols: 3
   },
   vikpe2x2: {
     isBinderPage: false,
     cropArea: {
-      width: 3307,
-      height: 4677,
-      offset: {x: 0, y: 0},
+      width: 2816,
+      height: 4086,
+      offset: {x: 150, y: 310},
     },
-    rowSpacing: 0,
-    colSpacing: 0,
+    rowSpacing: 630,
+    colSpacing: 310,
+    pocketMargin: {x: 20, y: 20},
     rows: 2,
     cols: 2
   },

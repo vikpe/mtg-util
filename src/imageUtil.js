@@ -36,21 +36,20 @@ const cropPocketFromScan = (scanImage, slotIndex) => {
   const rowIndex = mtgUtil.getRowIndexByPocketIndex(slotIndex);
   const colIndex = mtgUtil.getColIndexByPocketIndex(slotIndex);
 
-  const slotWidth = Math.floor(config.input.cropArea.width / config.input.cols);
-  const slotHeight = Math.floor(config.input.cropArea.height / config.input.rows);
-
-  const offset = {
-    x: colIndex * slotWidth,
-    y: rowIndex * slotHeight,
+  const pocketWidth = Math.floor(config.input.cropArea.width / config.input.cols) - (config.input.colSpacing / 2);
+  const pocketHeight = Math.floor(config.input.cropArea.height / config.input.rows) - (config.input.rowSpacing / 2);
+  const pocketOffset = {
+    x: (colIndex * pocketWidth) + (colIndex * config.input.colSpacing),
+    y: (rowIndex * pocketHeight) + (rowIndex * config.input.rowSpacing),
   };
 
   return scanImage
     .clone()
     .crop(
-      offset.x,
-      offset.y,
-      slotWidth,
-      slotHeight
+      pocketOffset.x + config.input.pocketMargin.x,
+      pocketOffset.y + config.input.pocketMargin.y,
+      pocketWidth - (2 * config.input.pocketMargin.x),
+      pocketHeight - (2 * config.input.pocketMargin.y)
     );
 };
 
