@@ -9,7 +9,12 @@ const readImages = filePaths => {
 };
 
 const cropScan = scanImage => {
-  return scanImage.crop(0, 0, config.input.width, config.input.height);
+  return scanImage.crop(
+    config.input.cropArea.offset.x,
+    config.input.cropArea.offset.y,
+    config.input.cropArea.width,
+    config.input.cropArea.height
+  );
 };
 
 const cropArtworkFromCard = cardImage => {
@@ -34,14 +39,16 @@ const cropPocketFromScan = (scanImage, slotIndex) => {
   const slotWidth = Math.floor(config.input.width / config.input.cols);
   const slotHeight = Math.floor(config.input.height / config.input.rows);
 
-  const x = colIndex * slotWidth;
-  const y = rowIndex * slotHeight;
+  const offset = {
+    x: colIndex * slotWidth,
+    y: rowIndex * slotHeight,
+  };
 
   return scanImage
     .clone()
     .crop(
-      x,
-      y,
+      offset.x,
+      offset.y,
       slotWidth,
       slotHeight
     );
