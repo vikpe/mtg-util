@@ -1,6 +1,6 @@
 {
   "scripts": {
-    "start": "npm run extract && npm run combine && npm run clean && npm run thumbnails",
+    "start": "yarn run extract && yarn run combine && yarn run clean && yarn run thumbnails",
     "extract": "node src/extract.js",
     "combine": "node src/combine.js",
     "thumbnails": "node src/thumbnails.js",
