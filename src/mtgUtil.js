@@ -11,14 +11,13 @@ const getRowIndexByPocketIndex = pocketIndex => Math.floor(pocketIndex / config.
 const getColIndexByPocketIndex = pocketIndex => (pocketIndex % config.input.cols);
 
 const getPocketNumber = (pocketIndex, isFrontsideScan = false) => {
-  if (isFrontsideScan) {
-    return pocketIndex + 1;
+  if (!isFrontsideScan && config.input.isBinderPage) {
+    const colIndex = getColIndexByPocketIndex(pocketIndex);
+    const rowIndex = getRowIndexByPocketIndex(pocketIndex);
+    return (config.input.cols * (rowIndex + 1)) - colIndex;
   }
   else {
-    const rowIndex = getRowIndexByPocketIndex(pocketIndex);
-    const colIndex = getColIndexByPocketIndex(pocketIndex);
-
-    return (config.input.cols * (rowIndex + 1)) - colIndex;
+    return pocketIndex + 1;
   }
 };
 
