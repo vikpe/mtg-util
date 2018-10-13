@@ -1,5 +1,6 @@
 const inputTemplates = {
   ultrapro9x9: {
+    isBinderPage: true,
     cropArea: {
       width: 4960,
       height: 6840,
@@ -11,9 +12,10 @@ const inputTemplates = {
     cols: 3
   },
   vikpe2x2: {
+    isBinderPage: false,
     cropArea: {
-      width: 4960,
-      height: 6840,
+      width: 3307,
+      height: 4677,
       offset: {x: 0, y: 0},
     },
     rowSpacing: 0,

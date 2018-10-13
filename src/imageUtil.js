@@ -36,8 +36,8 @@ const cropPocketFromScan = (scanImage, slotIndex) => {
   const rowIndex = mtgUtil.getRowIndexByPocketIndex(slotIndex);
   const colIndex = mtgUtil.getColIndexByPocketIndex(slotIndex);
 
-  const slotWidth = Math.floor(config.input.width / config.input.cols);
-  const slotHeight = Math.floor(config.input.height / config.input.rows);
+  const slotWidth = Math.floor(config.input.cropArea.width / config.input.cols);
+  const slotHeight = Math.floor(config.input.cropArea.height / config.input.rows);
 
   const offset = {
     x: colIndex * slotWidth,

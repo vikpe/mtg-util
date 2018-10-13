@@ -77,7 +77,7 @@ const getScan = (filePath, scanIndex) => {
   const processScanImage = image => {
     image = imageUtil.cropScan(image);
 
-    if (scan.isFrontside) {
+    if (config.input.isBinderPage && scan.isFrontside) {
       image.rotate(180);
     }
 
