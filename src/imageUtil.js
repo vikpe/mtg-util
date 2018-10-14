@@ -93,11 +93,63 @@ const combineVertically = (images) => new global.Promise(resolve => {
   });
 });
 
+const gallerize = (images) => new global.Promise(resolve => {
+  const galleryWidth = 1024;
+  const galleryHeight = 1024;
+  const cols = 4;
+  const rows = 3;
+  const maxImageWidth = Math.floor(galleryWidth / cols);
+  const maxImageHeight = Math.floor(galleryHeight / rows);
+
+  // shrink images
+  images = images.map(image => image.scaleToFit(maxImageWidth, maxImageHeight, Jimp.RESIZE_BICUBIC));
+
+  // calculate totalt width/height used
+  // in order to center align gallery
+  const firstRowTotalWidth = _sum(images.slice(0, cols).map(image => image.bitmap.width));
+  const firstRowMaxHeight = Math.max(...images.slice(0, cols).map(image => image.bitmap.height));
+  const offsetX = Math.round((galleryWidth - firstRowTotalWidth) / 2);
+  const offsetY = Math.round((galleryHeight - (firstRowMaxHeight*rows)) / 2);
+
+  new Jimp(galleryWidth, galleryHeight, (err, galleryImage) => {
+    if (err) {
+      throw err;
+    }
+
+    let colIndex = 0;
+    let rowIndex = 0;
+    let nextX = 0 + offsetX;
+    let nextY = 0 + offsetY;
+
+    // combine to gallery
+    galleryImage.background(0xF2F2F2FF);
+
+    images.forEach(image => {
+      galleryImage = galleryImage.blit(image, nextX, nextY);
+      colIndex++;
+
+      if ((colIndex % cols) === 0) {
+        colIndex = 0;
+        rowIndex++;
+
+        nextX = 0 + offsetX;
+        nextY += image.bitmap.height;
+      }
+      else {
+        nextX += image.bitmap.width;
+      }
+    });
+
+    resolve(galleryImage);
+  });
+});
+
 module.exports = {
   readImages,
   cropPocketFromScan,
   cropScan,
   cropArtworkFromCard,
   combineHorizontally,
-  combineVertically
+  combineVertically,
+  gallerize
 };
