@@ -94,8 +94,8 @@ const combineVertically = (images) => new global.Promise(resolve => {
 });
 
 const gallerize = (images) => new global.Promise(resolve => {
-  const galleryWidth = 1024;
-  const galleryHeight = 1024;
+  const galleryWidth = 880;
+  const galleryHeight = 880;
   const cols = 4;
   const rows = 3;
   const maxImageWidth = Math.floor(galleryWidth / cols);

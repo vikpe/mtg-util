@@ -14,10 +14,12 @@ const writeThumbnail = (sourceFilePath, imageData) => new global.Promise(resolve
   spinner.start(chalk`${sourceFilePath} (thumbnail)`);
 
   const distFilePath = sourceFilePath.replace('.jpg', '-thumb.jpg');
+  const isGalleryImage = sourceFilePath.includes('gallery-');
+  const thumbnailScale = isGalleryImage ? config.output.galleryThumbnailScale : config.output.thumbnailScale;
 
   imageData
     .quality(config.output.imageQuality)
-    .scale(config.output.thumbnailScale)
+    .scale(thumbnailScale)
     .write(distFilePath, () => {
       spinner.succeed().stop();
       resolve();
