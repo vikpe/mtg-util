@@ -27,6 +27,7 @@ const writeThumbnail = (sourceFilePath, imageData) => new global.Promise(resolve
 const run = () => {
   const imageFilePaths = glob.sync(mtgUtil.globs.allDistFiles).sort();
 
+  console.log("\n");
   console.log(chalk`{green.bold MTG scan util (thumbnails)}`);
   console.log(chalk`{grey Found ${imageFilePaths.length} image(s)..}`);
 

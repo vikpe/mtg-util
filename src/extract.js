@@ -97,6 +97,7 @@ const getScan = (filePath, scanIndex) => {
 
 const scanFilePaths = glob.sync(mtgUtil.globs.scans).sort();
 
+console.log("\n");
 console.log(chalk`{green.bold MTG scan util (extract)}`);
 console.log(chalk`{grey Found ${scanFilePaths.length} scan(s)..}`);
 

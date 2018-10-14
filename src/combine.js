@@ -10,6 +10,7 @@ const spinner = ora();
 
 const pocketFrontsideFilePaths = mtgUtil.getFrontsideFilePaths();
 
+console.log("\n");
 console.log(chalk`{green.bold MTG scan util (combine)}`);
 console.log(chalk`{grey Found ${pocketFrontsideFilePaths.length} card(s)..}`);
 
