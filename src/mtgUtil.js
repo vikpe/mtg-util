@@ -38,7 +38,13 @@ const getImageInfo = fileName => {
   };
 };
 
-const getFrontsideFilePaths = () => glob.sync(globs.frontsides);
+const getFrontsideFilePaths = () => {
+  const files = glob.sync(globs.frontsides);
+  const collator = new Intl.Collator(undefined, {numeric: true, sensitivity: 'base'});
+  const sortedFiles = files.sort(collator.compare);
+
+  return sortedFiles;
+};
 
 const globs = {
   scans: `${config.scansSourceDir}/*`,
