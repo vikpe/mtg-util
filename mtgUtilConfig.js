@@ -37,9 +37,9 @@ module.exports = {
     cardWidth: 512,
     thumbnailScale: 0.18,
     galleryThumbnailScale: 0.4,
-    writeGalleries: true,
+    writeGalleries: false,
     writeSheetFrontsides: false,
-    writeThumbnails: true,
+    writeThumbnails: false,
     writeArtwork: false
   }
 };
