@@ -3,7 +3,7 @@ const chalk = require('chalk');
 const glob = require('glob');
 const Jimp = require('jimp');
 const ora = require('ora');
-const PQueue = require('p-queue');
+const {default: PQueue} = require('p-queue');
 
 // custom
 const config = require('../mtgUtilConfig');

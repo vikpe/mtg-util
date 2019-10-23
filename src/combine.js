@@ -1,7 +1,7 @@
 // vendor
 const chalk = require('chalk');
 const ora = require('ora');
-const PQueue = require('p-queue');
+const {default: PQueue} = require('p-queue');
 
 // config
 const imageUtil = require('./imageUtil');
