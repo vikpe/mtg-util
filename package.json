@@ -9,12 +9,12 @@
     "clean": "node src/clean.js"
   },
   "dependencies": {
-    "chalk": "^2.4.2",
-    "glob": "^7.1.5",
-    "jimp": "^0.8.5",
+    "chalk": "^3.0.0",
+    "glob": "^7.1.6",
+    "jimp": "^0.9.3",
     "lodash": "^4.17.15",
-    "ora": "^4.0.2",
-    "p-queue": "^6.2.0",
-    "yargs": "^14.2.0"
+    "ora": "^4.0.3",
+    "p-queue": "^6.2.1",
+    "yargs": "^15.0.2"
   }
 }
