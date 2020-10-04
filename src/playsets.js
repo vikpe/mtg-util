@@ -10,7 +10,7 @@ const imageUtil = require("./imageUtil");
 const mtgUtil = require("./mtgUtil");
 const spinner = ora();
 
-const similarityThreshold = 0.15;
+const similarityThreshold = 0.18;
 const artworkFilePaths = glob.sync(mtgUtil.globs.artwork);
 
 console.log(chalk`{green.bold MTG scan util (find playsets)}`);
