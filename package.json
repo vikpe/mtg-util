@@ -1,6 +1,6 @@
 {
   "scripts": {
-    "start": "yarn run extract && yarn run combine && yarn run gallerize && yarn run clean && yarn run thumbnails",
+    "start": "yarn run extract && yarn run combine && yarn run gallerize && yarn run playsets && yarn run clean && yarn run thumbnails",
     "combine": "node src/combine.js",
     "extract": "node src/extract.js",
     "gallerize": "node src/gallerize.js",
