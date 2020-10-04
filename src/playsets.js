@@ -1,11 +1,11 @@
 // vendor
-const chalk = require('chalk');
-const Jimp = require('jimp');
-const glob = require('glob');
+const chalk = require("chalk");
+const Jimp = require("jimp");
+const glob = require("glob");
 
 // custom
-const imageUtil = require('./imageUtil');
-const mtgUtil = require('./mtgUtil');
+const imageUtil = require("./imageUtil");
+const mtgUtil = require("./mtgUtil");
 
 const similarityThreshold = 0.1;
 const artworkFilePaths = glob.sync(mtgUtil.globs.artwork);
