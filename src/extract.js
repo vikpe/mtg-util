@@ -58,6 +58,7 @@ const writeCardArtwork = (cardImage, pocketId) => {
   imageUtil
     .cropArtworkFromCard(cardImage)
     .resize(120, Jimp.AUTO)
+    .normalize()
     .write(distFilePath);
 };
 
