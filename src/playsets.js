@@ -7,7 +7,7 @@ const glob = require("glob");
 const imageUtil = require("./imageUtil");
 const mtgUtil = require("./mtgUtil");
 
-const similarityThreshold = 0.1;
+const similarityThreshold = 0.2;
 const artworkFilePaths = glob.sync(mtgUtil.globs.artwork);
 
 console.log(chalk`{green.bold MTG scan util (find playsets)}`);
