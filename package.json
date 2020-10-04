@@ -6,7 +6,8 @@
     "gallerize": "node src/gallerize.js",
     "thumbnails": "node src/thumbnails.js",
     "playsets": "node src/playsets.js",
-    "clean": "node src/clean.js"
+    "clean": "node src/clean.js",
+    "format": "prettier --write src"
   },
   "dependencies": {
     "chalk": "^4.1.0",
