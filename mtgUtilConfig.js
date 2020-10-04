@@ -40,6 +40,6 @@ module.exports = {
     writeGalleries: false,
     writeSheetFrontsides: false,
     writeThumbnails: false,
-    writeArtwork: false
+    writeArtwork: true
   }
 };
