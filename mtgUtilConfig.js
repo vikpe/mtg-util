@@ -34,7 +34,7 @@ module.exports = {
     dir: 'dist',
     imageQuality: 90,
     sheetWidth: 1024,
-    cardWidth: 512,
+    cardWidth: 384,
     thumbnailScale: 0.18,
     galleryThumbnailScale: 0.4,
     writeGalleries: false,
