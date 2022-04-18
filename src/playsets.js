@@ -3,18 +3,15 @@ const chalk = require("chalk");
 const ora = require("ora");
 const Jimp = require("jimp");
 const glob = require("glob");
-const { default: PQueue } = require("p-queue");
+const {default: PQueue} = require("p-queue");
 
 // custom
 const imageUtil = require("./imageUtil");
 const mtgUtil = require("./mtgUtil");
+const config = require("../mtgUtilConfig");
 const spinner = ora();
 
-const similarityThreshold = 0.18;
-const artworkFilePaths = glob.sync(mtgUtil.globs.artwork);
-
-console.log(chalk`{green.bold MTG scan util (find playsets)}`);
-console.log(chalk`{grey Found ${artworkFilePaths.length} card(s)..}`);
+const similarityThreshold = config.output.playsetSimilarityThreshold;
 
 const getPlaysets = (imagesData) => {
   const imageDistances = {};
@@ -42,7 +39,7 @@ const getPlaysets = (imagesData) => {
       // perceived distance
       const distance = Jimp.distance(currentImage, otherImage);
 
-       // pixel difference
+      // pixel difference
       const diff = Jimp.diff(currentImage, otherImage);
 
       imageDistances[key] = distance;
@@ -99,24 +96,36 @@ const writePlayset = (artworkFilePaths, destFilePath) => {
   });
 };
 
-const queue = new PQueue({ concurrency: 1 });
+const run = () => {
+  const artworkFilePaths = glob.sync(mtgUtil.globs.artwork);
 
-imageUtil
-  .readImages(artworkFilePaths)
-  .then((imagesData) => {
-    const playsets = getPlaysets(imagesData);
-    const numberOfPlaysets = Object.keys(playsets).length;
+  console.log(chalk`{green.bold MTG scan util (find playsets)}`);
+  console.log(chalk`{grey Found ${artworkFilePaths.length} card(s)..}`);
 
-    console.log(chalk`{grey Found ${numberOfPlaysets} playset(s)..}`, playsets);
-    return playsets;
-  })
-  .then((playsets) => {
-    // write playsets
-    Object.values(playsets).forEach((imageIndexes, playsetIndex) => {
-      const filePaths = imageIndexes.map((index) => artworkFilePaths[index]);
+  const queue = new PQueue({concurrency: 1});
 
-      queue.add(() =>
-        writePlayset(filePaths, `dist/playset-${1 + playsetIndex}.jpg`)
-      );
+  imageUtil
+    .readImages(artworkFilePaths)
+    .then((imagesData) => {
+      const playsets = getPlaysets(imagesData);
+      const numberOfPlaysets = Object.keys(playsets).length;
+
+      console.log(chalk`{grey Found ${numberOfPlaysets} playset(s)..}`,
+        playsets);
+      return playsets;
+    })
+    .then((playsets) => {
+      // write playsets
+      Object.values(playsets).forEach((imageIndexes, playsetIndex) => {
+        const filePaths = imageIndexes.map((index) => artworkFilePaths[index]);
+
+        queue.add(() =>
+          writePlayset(filePaths, `dist/playset-${1 + playsetIndex}.jpg`)
+        );
+      });
     });
-  });
+}
+
+if (config.output.writePlaysets) {
+  run();
+}
