@@ -37,11 +37,11 @@ module.exports = {
     cardWidth: 384,
     thumbnailScale: 0.18,
     galleryThumbnailScale: 0.4,
-    playsetSimilarityThreshold: 0.18,
+    playsetSimilarityThreshold: 0.25,
     writeGalleries: false,
     writeSheetFrontsides: false,
     writeThumbnails: false,
-    writeArtwork: false,
-    writePlaysets: false,
+    writeArtwork: true,
+    writePlaysets: true,
   }
 };
