@@ -41,7 +41,7 @@ module.exports = {
     writeGalleries: false,
     writeSheetFrontsides: false,
     writeThumbnails: false,
-    writeArtwork: true,
-    writePlaysets: true,
+    writeArtwork: false,
+    writePlaysets: false,
   }
 };
