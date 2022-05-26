@@ -30,7 +30,7 @@ const writeSheet = (scan) =>
 const writePocket = (scan, pocketIndex) =>
   new global.Promise((resolve) => {
     const pocketNumber = mtgUtil.getPocketNumber(pocketIndex, scan.isFrontside);
-    const pocketImage = imageUtil.cropPocketFromScan(scan.image, pocketIndex);
+    const pocketImage = imageUtil.cropPocketFromScan(scan.image, pocketIndex, pocketNumber);
     const pocketId = `${scan.sheetId}-pocket-${pocketNumber}`;
 
     spinner.start(chalk`{grey - pocket ${pocketNumber}}`);

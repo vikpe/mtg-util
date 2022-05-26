@@ -16,10 +16,10 @@ const inputTemplates = {
     isBinderPage: false,
     cropArea: {
       width: 2816,
-      height: 4086,
+      height: 4226,
       offset: {x: 150, y: 310},
     },
-    rowSpacing: 630,
+    rowSpacing: 820,
     colSpacing: 310,
     pocketMargin: {x: 20, y: 20},
     rows: 2,

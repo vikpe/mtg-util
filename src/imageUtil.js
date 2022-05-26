@@ -32,7 +32,7 @@ const cropArtworkFromCard = (cardImage) => {
     );
 };
 
-const cropPocketFromScan = (scanImage, slotIndex) => {
+const cropPocketFromScan = (scanImage, slotIndex, pocketNumber) => {
   const rowIndex = mtgUtil.getRowIndexByPocketIndex(slotIndex);
   const colIndex = mtgUtil.getColIndexByPocketIndex(slotIndex);
 
@@ -47,11 +47,17 @@ const cropPocketFromScan = (scanImage, slotIndex) => {
     y: rowIndex * pocketHeight + rowIndex * config.input.rowSpacing,
   };
 
+  let customVerticalOffset = 0
+
+  if (4 === pocketNumber) {
+    customVerticalOffset = -140
+  }
+
   return scanImage
     .clone()
     .crop(
       pocketOffset.x + config.input.pocketMargin.x,
-      pocketOffset.y + config.input.pocketMargin.y,
+      pocketOffset.y + config.input.pocketMargin.y + customVerticalOffset,
       pocketWidth - 2 * config.input.pocketMargin.x,
       pocketHeight - 2 * config.input.pocketMargin.y
     );
